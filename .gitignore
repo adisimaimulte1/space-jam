@@ -1,0 +1,49 @@
+# Python cache
+
+**pycache**/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+
+venv/
+.env/
+.env.*
+
+# Distribution / packaging
+
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Logs
+
+*.log
+
+# OS junk
+
+.DS_Store
+Thumbs.db
+
+# IDEs / editors
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Save files / runtime data
+
+*.save
+*.dat
+
+# Testing / coverage
+
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Misc
+
+*.tmp
