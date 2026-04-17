@@ -53,6 +53,7 @@ class MainScreen(Screen):
 
         self.update_layout()
 
+
     # parametric functions
     def ease_in_out(self, t):
         t = max(0.0, min(1.0, t))

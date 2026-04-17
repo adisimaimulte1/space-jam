@@ -19,7 +19,7 @@ class Game:
 
         self.clock = pygame.time.Clock()
         self.running = True
-        self.FPS = 60
+        self.FPS = 90
 
         self.current_screen = MainScreen(self)
         self.current_screen.on_enter()
@@ -39,6 +39,9 @@ class Game:
     def run(self):
         while self.running:
             dt = self.clock.tick(self.FPS) / 1000.0
+
+            if int(pygame.time.get_ticks()) % 1000 < 16:
+                print(f"FPS: {int(self.clock.get_fps())}")
 
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:

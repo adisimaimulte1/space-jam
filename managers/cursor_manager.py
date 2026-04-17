@@ -4,26 +4,34 @@ import pygame
 
 class BetterCursor:
     def __init__(self):
+        # hide the actual cursor
         pygame.mouse.set_visible(False)
+ 
+
+        # define screen space
+        self.screen_w, self.screen_h = pygame.display.get_surface().get_size()
+        self.explosion_surface = pygame.Surface((self.screen_w, self.screen_h), pygame.SRCALPHA)
+
+
+        # load images
+        self.cursor_normal = pygame.image.load("assets/images/cursor/cursor_normal.png").convert_alpha()
+        self.cursor_alt = pygame.image.load("assets/images/cursor/cursor_alt.png").convert_alpha()
+
 
         # sound effects
-        self.explosion_sfx = pygame.mixer.Sound(
-            "assets/sound_effects/cursor/cursor_explosion.mp3"
-        )
+        self.explosion_sfx = pygame.mixer.Sound("assets/sound_effects/cursor/cursor_explosion.mp3")
+        self.click_sfx = pygame.mixer.Sound("assets/sound_effects/cursor/cursor_click.mp3")
+        self.tension_sfx = pygame.mixer.Sound("assets/sound_effects/cursor/cursor_tension.mp3")
+
         self.explosion_sfx.set_volume(0.2)
-
-        self.click_sfx = pygame.mixer.Sound(
-            "assets/sound_effects/cursor/cursor_click.mp3"
-        )
         self.click_sfx.set_volume(0.8)
-
-        self.tension_sfx = pygame.mixer.Sound(
-            "assets/sound_effects/cursor/cursor_tension.mp3"
-        )
         self.tension_sfx.set_volume(0.35)
+
         self.tension_channel = pygame.mixer.Channel(2)
         self.tension_playing = False
 
+
+        # different variables
         self.pos = pygame.Vector2(pygame.mouse.get_pos())
         self.draw_pos = pygame.Vector2(self.pos)
         self.last_move_dir = pygame.Vector2(1, 0)
@@ -64,21 +72,16 @@ class BetterCursor:
 
         self.base_size = 48
 
-        self.cursor_normal = pygame.image.load(
-            "assets/images/cursor/cursor_normal.png"
-        ).convert_alpha()
 
-        self.cursor_alt = pygame.image.load(
-            "assets/images/cursor/cursor_alt.png"
-        ).convert_alpha()
-
+    # parametric functions
     def exp_smooth(self, current, target, sharpness, dt, epsilon=0.001):
         if abs(target - current) < epsilon:
             return target
         return current + (target - current) * (1.0 - math.exp(-sharpness * dt))
 
     def exp_smooth_vec2(self, current, target, sharpness, dt, epsilon=0.1):
-        if current.distance_to(target) < epsilon:
+        # compute square length instead of rquare root for time optimization
+        if (target - current).length_squared() < epsilon * epsilon: 
             return pygame.Vector2(target)
         return current.lerp(target, 1.0 - math.exp(-sharpness * dt))
 
@@ -92,9 +95,26 @@ class BetterCursor:
         t = max(0.0, min(1.0, t))
         return t * t * (3.0 - 2.0 * t)
 
+
+    # trigger methods
+    def trigger_explosion(self):
+        self.exploding = True
+        self.explosion_time = 0.0
+        self.hold_time = 0.0
+
+        if self.tension_playing:
+            self.tension_channel.stop()
+            self.tension_playing = False
+
+        self.explosion_sfx.stop()
+        self.explosion_sfx.play()
+
+
+    # update methods
     def update(self, dt):
         dt = min(dt, 0.033)
 
+        # find the mouse position on screen
         mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
         delta = mouse_pos - self.pos
         self.pos = mouse_pos
@@ -106,6 +126,7 @@ class BetterCursor:
             dt
         )
 
+        # update the target angle based on the direction of movement
         target_angle = self.angle
         movement_deadzone = 0.5
 
@@ -116,6 +137,7 @@ class BetterCursor:
                 + self.default_rotation_offset
             )
 
+        # animate angle delta with lerp
         self.angle = self.lerp_angle(
             self.angle,
             target_angle,
@@ -123,6 +145,7 @@ class BetterCursor:
             dt
         )
 
+        # update explosion criteria
         self.prev_mouse_down = self.mouse_down
         self.mouse_down = pygame.mouse.get_pressed()[0]
 
@@ -141,7 +164,7 @@ class BetterCursor:
             self.shake_strength = 0.0
             self.shake_offset.update(0, 0)
 
-            # Stage 1: fast exponential growth to hold_size
+            # stage 1: fast exponential growth to hold_size
             if self.hold_time < self.slow_expand_delay:
                 self.target_scale = self.hold_size
 
@@ -149,7 +172,7 @@ class BetterCursor:
                     self.tension_channel.stop()
                     self.tension_playing = False
 
-            # Stage 2: slow expansion from hold_size to max_hold_scale + shaking
+            # stage 2: slow expansion from hold_size to max_hold_scale + shaking
             else:
                 slow_t = (self.hold_time - self.slow_expand_delay) / self.slow_expand_duration
                 slow_t = self.smoothstep(slow_t)
@@ -186,7 +209,7 @@ class BetterCursor:
         if just_released and not self.exploding:
             self.target_scale = self.base_scale
 
-        # Faster smoothing during the first fast charge
+        # faster smoothing during the first fast charge
         current_scale_smooth = self.scale_smooth
         if self.mouse_down and self.hold_time < self.fast_hold_duration:
             current_scale_smooth = 38.0
@@ -213,18 +236,8 @@ class BetterCursor:
         if self.unlock_flash > 0:
             self.unlock_flash = max(0, self.unlock_flash - dt)
 
-    def trigger_explosion(self):
-        self.exploding = True
-        self.explosion_time = 0.0
-        self.hold_time = 0.0
 
-        if self.tension_playing:
-            self.tension_channel.stop()
-            self.tension_playing = False
-
-        self.explosion_sfx.stop()
-        self.explosion_sfx.play()
-
+    # drawing methods
     def draw(self, surface):
         if self.exploding:
             self.draw_explosion(surface)
@@ -232,6 +245,7 @@ class BetterCursor:
             self.draw_cursor(surface)
 
     def draw_cursor(self, surface):
+        # update cursor image based on calculated pose
         image = self.cursor_alt if self.alt_cursor else self.cursor_normal
 
         scaled_size = max(1, int(self.base_size * self.scale))
@@ -264,13 +278,14 @@ class BetterCursor:
 
         color = (255, 255, 255)
 
-        # Better easing
+        # better easing
         ease_out = 1.0 - (1.0 - t) ** 3
         fade = 1.0 - t
 
-        fx = pygame.Surface(surface.get_size(), pygame.SRCALPHA)
+        fx = self.explosion_surface
+        fx.fill((0, 0, 0, 0))
 
-        # 1) Bright central flash
+        # 1 - bright central flash
         flash_r = int(8 + 42 * ease_out)
         flash_alpha = int(180 * fade)
         pygame.draw.circle(
@@ -289,7 +304,7 @@ class BetterCursor:
             inner_flash_r
         )
 
-        # 2) Main shockwave ring
+        # 2 - main shockwave ring
         ring_r = int(14 + 70 * ease_out)
         ring_alpha = int(230 * fade)
         ring_width = max(1, int(5 - 3 * t))
@@ -301,7 +316,7 @@ class BetterCursor:
             ring_width
         )
 
-        # 3) Secondary softer ring for depth
+        # 3 - secondary softer ring for depth
         ring2_r = int(8 + 40 * ease_out)
         ring2_alpha = int(110 * fade)
         pygame.draw.circle(
@@ -312,7 +327,7 @@ class BetterCursor:
             2
         )
 
-        # 4) Radial streaks
+        # 4 - radial streaks
         streak_count = 8
         for i in range(streak_count):
             ang = math.radians(i * (360 / streak_count) + t * 30)
@@ -332,7 +347,7 @@ class BetterCursor:
                 max(1, int(4 - 2 * t))
             )
 
-        # 5) Triangle shard-like particles instead of circles
+        # 5 - triangle shard-like particles instead of circles
         shard_count = 10
         for i in range(shard_count):
             ang = math.radians(i * (360 / shard_count) + 18)

@@ -4,9 +4,7 @@ import pygame
 class MusicManager:
     def __init__(self):
         self.current_track = None
-
-        self.default_volume = 0.5
-        self.volume = self.default_volume
+        self.volume = 0.5
         self.is_muted = False
 
         self.icon_timer = 0.0
@@ -36,12 +34,25 @@ class MusicManager:
         self.pending_loop = True
         self.pending_delay = 0.0
 
-        self.start_sfx = pygame.mixer.Sound("assets/sound_effects/transitions/entering_game.wav")
+        self.start_sfx = pygame.mixer.Sound(
+            "assets/sound_effects/transitions/entering_game.wav"
+        )
+        self.start_sfx_length = self.start_sfx.get_length()
         self.sfx_channel = pygame.mixer.Channel(1)
+
+        self.screen_w, self.screen_h = pygame.display.get_surface().get_size()
+        self.icon_topright = (self.screen_w - 30, 30)
+
+        self._icon_temp = pygame.Surface(
+            self.icon_volume.get_size(),
+            pygame.SRCALPHA
+        )
 
     def _applied_volume(self):
         return 0.0 if self.is_muted else self.volume
 
+
+    # base methods
     def play(self, track_name, loop=True, fade_ms=500, force_restart=False):
         if self.current_track == track_name and not force_restart:
             return
@@ -59,8 +70,9 @@ class MusicManager:
         pygame.mixer.music.fadeout(fade_ms)
         self.current_track = None
 
+
+    # aux methods
     def set_volume(self, volume):
-        self.default_volume = volume
         self.volume = volume
         if not self.is_muted:
             pygame.mixer.music.set_volume(volume)
@@ -68,25 +80,25 @@ class MusicManager:
     def toggle_mute(self):
         self.is_muted = not self.is_muted
         pygame.mixer.music.set_volume(self._applied_volume())
+        self.sfx_channel.set_volume(self._applied_volume())
         self.icon_timer = self.icon_duration
 
-        # optional: mute SFX too
-        self.sfx_channel.set_volume(self._applied_volume())
-
     def play_start_sequence_then(self, next_track_name, next_loop=True, music_fade_ms=400):
-        # stop current music
+        if self.pending_track is not None:
+            return
+
         self.stop(fade_ms=music_fade_ms)
 
-        # play special sequence
         self.sfx_channel.stop()
         self.sfx_channel.set_volume(self._applied_volume())
         self.sfx_channel.play(self.start_sfx)
 
-        # queue next track after sfx duration
         self.pending_track = next_track_name
         self.pending_loop = next_loop
-        self.pending_delay = self.start_sfx.get_length()
+        self.pending_delay = self.start_sfx_length
 
+
+    # update methods
     def update(self, dt):
         if self.icon_timer > 0:
             self.icon_timer = max(0.0, self.icon_timer - dt)
@@ -103,15 +115,19 @@ class MusicManager:
 
                 self.play(track, loop=loop, fade_ms=0, force_restart=True)
 
+
+    # draw methods
     def draw(self, surface):
         if self.icon_timer <= 0:
             return
 
+        # update opacity
         alpha = int(255 * (self.icon_timer / self.icon_duration))
-
         icon = self.icon_volume if self.is_muted else self.icon_muted
-        icon_surface = icon.copy()
-        icon_surface.set_alpha(alpha)
 
-        rect = icon_surface.get_rect(topright=(surface.get_width() - 30, 30))
-        surface.blit(icon_surface, rect)
+        self._icon_temp.fill((0, 0, 0, 0))
+        self._icon_temp.blit(icon, (0, 0))
+        self._icon_temp.set_alpha(alpha)
+
+        rect = self._icon_temp.get_rect(topright=self.icon_topright)
+        surface.blit(self._icon_temp, rect)
