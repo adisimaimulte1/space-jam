@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cn84ebp5hl6tn"]
+
+[ext_resource type="Script" uid="uid://bl44scf3hc1uv" path="res://scripts/scenes/game_root.gd" id="1_lkoyb"]
+[ext_resource type="Texture2D" uid="uid://cpt7c5jfxa6ue" path="res://assets/video/images/backgrounds/main_screen/space_background_void.png" id="2_kbynm"]
+[ext_resource type="Script" uid="uid://c4i8ktcoglmue" path="res://scripts/rendering/shader_layer.gd" id="3_kbynm"]
+[ext_resource type="Shader" uid="uid://bi5lpbcm3u2h2" path="res://shaders/general_shader.gdshader" id="4_tnfu1"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_v7i1n"]
+shader = ExtResource("4_tnfu1")
+shader_parameter/resolution = Vector2(1280, 720)
+shader_parameter/jitter_strength = 0.0007
+shader_parameter/noise_strength = 0.002
+shader_parameter/scanline_strength = 0.18
+shader_parameter/chroma_strength = 1.0
+
+[node name="GameRoot" type="Node2D" unique_id=233710376]
+script = ExtResource("1_lkoyb")
+
+[node name="VoidLayer" type="Sprite2D" parent="." unique_id=1810315363]
+position = Vector2(960, 540)
+scale = Vector2(8, 8)
+texture = ExtResource("2_kbynm")
+
+[node name="SceneContainer" type="Node2D" parent="." unique_id=758732241]
+
+[node name="ShaderLayer" type="CanvasLayer" parent="." unique_id=1853187264]
+script = ExtResource("3_kbynm")
+
+[node name="ColorRect" type="ColorRect" parent="ShaderLayer" unique_id=546882575]
+material = SubResource("ShaderMaterial_v7i1n")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

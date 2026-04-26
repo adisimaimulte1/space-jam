@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://bpdlquwfivdrs"]
+
+[ext_resource type="Script" uid="uid://cv2ljs62utfw5" path="res://scripts/entities/projectiles/bullet.gd" id="1_r4ks0"]
+[ext_resource type="Texture2D" uid="uid://c3ggkwhn1j1w5" path="res://assets/video/images/rocket/bullet/alter/alter_bullet_1.png" id="2_c0oax"]
+[ext_resource type="Texture2D" uid="uid://dhkchxhdr1d5e" path="res://assets/video/images/rocket/bullet/alter/alter_bullet_2.png" id="3_cuxtu"]
+[ext_resource type="Texture2D" uid="uid://byc4xj0wbgid2" path="res://assets/video/images/rocket/bullet/alter/alter_bullet_3.png" id="4_66t2e"]
+[ext_resource type="Texture2D" uid="uid://de40lg4qe6hv2" path="res://assets/video/images/rocket/bullet/alter/alter_bullet_4.png" id="5_6i0nl"]
+[ext_resource type="Texture2D" uid="uid://cx66hg36tm1ux" path="res://assets/video/images/rocket/bullet/origin/origin_bullet_1.png" id="6_ng3j0"]
+[ext_resource type="Texture2D" uid="uid://1t5xq81sjkmb" path="res://assets/video/images/rocket/bullet/origin/origin_bullet_2.png" id="7_erysc"]
+[ext_resource type="Texture2D" uid="uid://cbbh02s245f4b" path="res://assets/video/images/rocket/bullet/origin/origin_bullet_3.png" id="8_2sj1p"]
+[ext_resource type="Texture2D" uid="uid://c5auco8ltkq7e" path="res://assets/video/images/rocket/bullet/origin/origin_bullet_4.png" id="9_52qxy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_r4ks0"]
+size = Vector2(12, 12)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kcv1u"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_c0oax")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_cuxtu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_66t2e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_6i0nl")
+}],
+"loop": true,
+"name": &"alter",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_ng3j0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_erysc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_2sj1p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_52qxy")
+}],
+"loop": true,
+"name": &"origin",
+"speed": 8.0
+}]
+
+[node name="Bullet" type="Area2D" unique_id=1279118321]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("1_r4ks0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1255923043]
+shape = SubResource("RectangleShape2D_r4ks0")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=293650972]
+sprite_frames = SubResource("SpriteFrames_kcv1u")
+animation = &"alter"

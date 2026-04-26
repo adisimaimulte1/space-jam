@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://ctec2n8nsfssr"]
+
+[ext_resource type="Script" uid="uid://dy2eprte5aeni" path="res://scripts/scenes/space/transition_scene.gd" id="1_1fi4q"]
+[ext_resource type="AudioStream" uid="uid://bghf2js4lbn8s" path="res://assets/audio/music/game_song.mp3" id="2_rwqs2"]
+[ext_resource type="Texture2D" uid="uid://byosykmdtvpdu" path="res://assets/video/images/backgrounds/main_screen/space_background_stars.png" id="3_k7n8m"]
+[ext_resource type="Texture2D" uid="uid://xrauh0y2wmle" path="res://assets/video/images/backgrounds/main_screen/space_background_planets.png" id="4_mnbdg"]
+[ext_resource type="Texture2D" uid="uid://eorg541duc6a" path="res://assets/video/images/backgrounds/main_screen/space_background_nebula.png" id="5_ddd8u"]
+[ext_resource type="Texture2D" uid="uid://cm35v2hr7ucvs" path="res://assets/video/images/logo/space_jam_logo_white_outline.png" id="6_e8tqe"]
+[ext_resource type="FontFile" uid="uid://cl6hqbnkclxpc" path="res://assets/video/fonts/PixelifySans-Bold.ttf" id="7_cq0um"]
+[ext_resource type="AudioStream" uid="uid://0jibotpf8fs1" path="res://assets/audio/sound_effects/transitions/entering_game.wav" id="8_ttrkx"]
+
+[node name="TransitionScene" type="Node2D" unique_id=1335938744]
+script = ExtResource("1_1fi4q")
+game_music_stream = ExtResource("2_rwqs2")
+
+[node name="MenuLayer" type="Node2D" parent="." unique_id=814553762]
+
+[node name="Stars" type="Sprite2D" parent="MenuLayer" unique_id=715673520]
+position = Vector2(960, 540)
+scale = Vector2(8.3, 8.3)
+texture = ExtResource("3_k7n8m")
+
+[node name="Planets" type="Sprite2D" parent="MenuLayer" unique_id=1761259816]
+position = Vector2(960, 540)
+scale = Vector2(8.3, 8.3)
+texture = ExtResource("4_mnbdg")
+
+[node name="Nebula" type="Sprite2D" parent="MenuLayer" unique_id=591864003]
+position = Vector2(960, 540)
+scale = Vector2(8.3, 8.3)
+texture = ExtResource("5_ddd8u")
+
+[node name="GameLayer" type="Node2D" parent="." unique_id=2038865383]
+
+[node name="StarsGrid" type="Node2D" parent="GameLayer" unique_id=804853817]
+
+[node name="UI" type="Node2D" parent="." unique_id=795916634]
+
+[node name="Logo" type="Sprite2D" parent="UI" unique_id=593442043]
+position = Vector2(910, 450)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("6_e8tqe")
+
+[node name="PressStart" type="Label" parent="UI" unique_id=1202533626]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 555.0
+offset_top = 900.0
+offset_right = 1365.0
+offset_bottom = 997.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("7_cq0um")
+theme_override_font_sizes/font_size = 80
+text = "PRESS START TO PLAY"
+horizontal_alignment = 1
+
+[node name="TransitionSFX" type="AudioStreamPlayer2D" parent="." unique_id=867712412]
+stream = ExtResource("8_ttrkx")

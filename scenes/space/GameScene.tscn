@@ -1,0 +1,100 @@
+[gd_scene format=3 uid="uid://ceqeehdtidd2u"]
+
+[ext_resource type="Script" uid="uid://b40sqslja81th" path="res://scripts/scenes/space/game_scene.gd" id="1_eopsk"]
+[ext_resource type="Script" uid="uid://cguexjouke8ga" path="res://scripts/entities/planets/planet_manager.gd" id="2_gpaso"]
+[ext_resource type="PackedScene" uid="uid://bkakc055ufg6y" path="res://scenes/entities/jars/PlanetJar.tscn" id="2_k5hjc"]
+[ext_resource type="PackedScene" uid="uid://driaeqjtbf73j" path="res://scenes/entities/enemies/Vyiln.tscn" id="3_cer5d"]
+[ext_resource type="PackedScene" uid="uid://bsrn23abhgiun" path="res://scenes/entities/player/Rocket.tscn" id="3_k5hjc"]
+[ext_resource type="Script" uid="uid://c7hq3tgsiawvm" path="res://scripts/systems/stats/game_stats.gd" id="4_cer5d"]
+[ext_resource type="Script" uid="uid://hqbuh5ktibw8" path="res://scripts/ui/hud.gd" id="5_d8aas"]
+
+[node name="GameScene" type="Node2D" unique_id=1309816314]
+script = ExtResource("1_eopsk")
+jar_scene = ExtResource("2_k5hjc")
+vyiln_scene = ExtResource("3_cer5d")
+released_planet_friction = null
+released_planet_spawn_scale = null
+released_planet_spawn_distance = null
+jar_seek_strength = null
+jar_max_speed = null
+jar_arrive_radius = null
+jar_orbit_strength = null
+jar_orbit_damping = null
+chunk_radius = null
+star_parallax = null
+planet_parallax = null
+camera_radius_x = null
+camera_radius_y = null
+camera_speed = null
+background_shake_distance = null
+background_shake_start_frequency = null
+background_shake_end_frequency = null
+background_shake_smoothness = null
+background_shake_vertical_multiplier = null
+background_shake_burst_multiplier = null
+background_shake_jitter_strength = null
+released_planet_launch_multiplier = null
+base_camera_zoom = null
+hyper_charge_zoom = null
+hyper_burst_zoom = null
+zoom_in_lerp_speed = null
+zoom_out_lerp_speed = null
+burst_zoom_duration = null
+enable_gameplay_spawning = null
+jar_spawn_interval_min = null
+jar_spawn_interval_max = null
+max_jars_alive = null
+jar_spawn_chance_per_window = null
+enemy_spawn_interval_min = null
+enemy_spawn_interval_max = null
+max_enemies_alive_base = null
+max_enemies_alive_peak = null
+spawn_radius_min = null
+spawn_radius_max = null
+
+[node name="GameStats" type="Node2D" parent="." unique_id=1598830215]
+script = ExtResource("4_cer5d")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1236745810]
+
+[node name="HUD" type="Control" parent="CanvasLayer" unique_id=910079580]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("5_d8aas")
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer/HUD" unique_id=1484454015]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="LivesLabel" type="Label" parent="CanvasLayer/HUD" unique_id=1613459348]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1589058138]
+
+[node name="StarChunks" type="Node2D" parent="." unique_id=593067023]
+
+[node name="PlanetLayer" type="Node2D" parent="." unique_id=1215648098]
+
+[node name="PlanetManager" type="Node2D" parent="." unique_id=1604051449]
+script = ExtResource("2_gpaso")
+
+[node name="JarLayer" type="Node2D" parent="." unique_id=1721672774]
+
+[node name="EnemyLayer" type="Node2D" parent="." unique_id=482011442]
+
+[node name="Rocket" parent="." unique_id=331269758 instance=ExtResource("3_k5hjc")]
+max_speed = 500.0
+acceleration = 900.0
+friction = 200.0
+rotation_lerp_speed = 4.0
+deadzone = 0.15
+min_turn_velocity = 10.0
+sprite_rotation_offset = 1.5707963267948966
+shoot_cooldown = 0.3
+hyper_speed_multiplier = 1.55
+hyper_acceleration_multiplier = 1.35

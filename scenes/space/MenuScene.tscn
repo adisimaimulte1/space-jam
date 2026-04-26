@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://drbc4llb12qcl"]
+
+[ext_resource type="Script" uid="uid://k5dirsiyifk7" path="res://scripts/scenes/space/menu_scene.gd" id="1_xbut1"]
+[ext_resource type="Texture2D" uid="uid://cm35v2hr7ucvs" path="res://assets/video/images/logo/space_jam_logo_white_outline.png" id="2_i7jh1"]
+[ext_resource type="FontFile" uid="uid://cl6hqbnkclxpc" path="res://assets/video/fonts/PixelifySans-Bold.ttf" id="3_i43ud"]
+[ext_resource type="Texture2D" uid="uid://byosykmdtvpdu" path="res://assets/video/images/backgrounds/main_screen/space_background_stars.png" id="5_igwhi"]
+[ext_resource type="Texture2D" uid="uid://xrauh0y2wmle" path="res://assets/video/images/backgrounds/main_screen/space_background_planets.png" id="6_t1gyk"]
+[ext_resource type="Texture2D" uid="uid://eorg541duc6a" path="res://assets/video/images/backgrounds/main_screen/space_background_nebula.png" id="7_l1fnc"]
+[ext_resource type="AudioStream" uid="uid://ddqppoo7pnxtt" path="res://assets/audio/music/menu_song.mp3" id="8_28rwo"]
+
+[node name="MenuScene" type="Node2D" unique_id=1565895949]
+script = ExtResource("1_xbut1")
+menu_music_stream = ExtResource("8_28rwo")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=709719728]
+
+[node name="Logo" type="Sprite2D" parent="UI" unique_id=2010594478]
+position = Vector2(910, 450)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("2_i7jh1")
+
+[node name="PressStart" type="Label" parent="UI" unique_id=480681844]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -405.0
+offset_top = -180.0
+offset_right = 405.0
+offset_bottom = -83.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_i43ud")
+theme_override_font_sizes/font_size = 80
+text = "PRESS START TO PLAY"
+horizontal_alignment = 1
+
+[node name="Background" type="Node2D" parent="." unique_id=703738580]
+
+[node name="Stars" type="Sprite2D" parent="Background" unique_id=1614743581]
+position = Vector2(960, 540)
+scale = Vector2(8.3, 8.3)
+texture = ExtResource("5_igwhi")
+
+[node name="Planets" type="Sprite2D" parent="Background" unique_id=370475462]
+position = Vector2(960, 540)
+scale = Vector2(8.3, 8.3)
+texture = ExtResource("6_t1gyk")
+
+[node name="Nebula" type="Sprite2D" parent="Background" unique_id=1194608427]
+position = Vector2(960, 540)
+scale = Vector2(8.3, 8.3)
+texture = ExtResource("7_l1fnc")
